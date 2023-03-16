@@ -25,6 +25,6 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 24,
-    color: '#fff',
+    color: '#fff'
   },
 });
