@@ -3,24 +3,29 @@ import { useState } from "react"
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, NativeSyntheticEvent, TextInputChangeEventData } from "react-native"
 
 import { Participant } from '../../components'
-import { PARTICIPANTS_LIST } from "../../constants"
 
 import { styles } from './Home.styles'
 
 const Home = () => {
   const [nameInputValue, setNameInputValue] = useState('')
-  const [participants, setParticipants] = useState( PARTICIPANTS_LIST )
+  const [participants, setParticipants] = useState<string[]>( [] )
 
-  const handleAddParticipant = (name: string) => {
-    if ( participants.includes( name ) ) {
-      return Alert.alert('Participant already exist!', `There is already a participant with the name: ${name}`)
+  const clearInput = () => {
+    setNameInputValue( () => '' )
+  }
+
+  const handleAddParticipant = () => {
+    if ( participants.includes( nameInputValue ) ) {
+      return Alert.alert('Participant already exist!', `There is already a participant with the name: ${nameInputValue}`)
     }
 
-    setParticipants( prev => [...prev, name ] )
-    setNameInputValue('')
+    setParticipants( prev => [...prev, nameInputValue ] )
+    clearInput()
   }
 
   const handleRemoveParticipant = ( name: string ) => {
+    const doRemove = () => setParticipants( prev => prev.filter( participant => participant !== name ) )
+
     Alert.alert('Remove', `Do you wish to remove participant: ${ name }`, [
       {
         text: 'Cancel',
@@ -30,13 +35,13 @@ const Home = () => {
         text: 'Remove',
         isPreferred: true,
         style: 'destructive',
-        onPress: () => Alert.alert('Removed')
+        onPress: () => doRemove()
       }
     ])
   }
 
-  const handleNameInputChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
-    setNameInputValue(() => e.nativeEvent.text)
+  const handleNameInputChange = (text: string ) => {
+    setNameInputValue(() => text)
   }
 
   return (
@@ -50,9 +55,9 @@ const Home = () => {
       </Text>
 
       <View style={styles.form}>
-        <TextInput style={styles.input} placeholder='Name' placeholderTextColor='#6b6b6b' onChange={handleNameInputChange} value={nameInputValue} />
+        <TextInput style={styles.input} placeholder='Name' placeholderTextColor='#6b6b6b' onChangeText={handleNameInputChange} value={nameInputValue} />
 
-        <TouchableOpacity  style={styles.button} onPress={() => handleAddParticipant( nameInputValue )}>
+        <TouchableOpacity  style={styles.button} onPress={handleAddParticipant}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -63,7 +68,7 @@ const Home = () => {
         showsVerticalScrollIndicator={ false }
         ListEmptyComponent={ () => (
           <Text style={styles.listEmptyText}>
-            Ninguém chegou ainda? Adicione participantes à sua lista de presença.
+            Nobody arrived yet? Add people to your event.
           </Text>
         )}
         renderItem={({item}) => (
