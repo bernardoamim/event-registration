@@ -51,7 +51,7 @@ const Home = () => {
       </Text>
 
       <Text style={styles.eventDate}>
-        Friday - November 4, 2022
+        Friday - November 4, 2023
       </Text>
 
       <View style={styles.form}>
