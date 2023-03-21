@@ -47,11 +47,11 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.eventName}>
-        Event name
+        Dev - Meet Up
       </Text>
 
       <Text style={styles.eventDate}>
-        Friday - November 4, 2023
+        Sunday - Mar 26, 2023
       </Text>
 
       <View style={styles.form}>
