@@ -1,17 +1,23 @@
 
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert } from "react-native"
+import { useState } from "react"
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, NativeSyntheticEvent, TextInputChangeEventData } from "react-native"
 
 import { Participant } from '../../components'
+import { PARTICIPANTS_LIST } from "../../constants"
 
 import { styles } from './Home.styles'
 
 const Home = () => {
-  const participants = [ 'Bernardo', 'Rodrigo', 'Thayná', 'João', 'José', 'Beta', 'Adelce', 'Kadu', 'Frango', 'Nois baby', 'Galo', 'Zero', 'Zóio', 'Joyce', 'Neal']
+  const [nameInputValue, setNameInputValue] = useState('')
+  const [participants, setParticipants] = useState( PARTICIPANTS_LIST )
 
   const handleAddParticipant = (name: string) => {
     if ( participants.includes( name ) ) {
-      return Alert.alert('Participant added.', `There is already a participant with the name: ${name}`)
+      return Alert.alert('Participant already exist!', `There is already a participant with the name: ${name}`)
     }
+
+    setParticipants( prev => [...prev, name ] )
+    setNameInputValue('')
   }
 
   const handleRemoveParticipant = ( name: string ) => {
@@ -29,6 +35,10 @@ const Home = () => {
     ])
   }
 
+  const handleNameInputChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    setNameInputValue(() => e.nativeEvent.text)
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.eventName}>
@@ -40,9 +50,9 @@ const Home = () => {
       </Text>
 
       <View style={styles.form}>
-        <TextInput style={styles.input} placeholder='Nome do participante' placeholderTextColor='#6b6b6b' />
+        <TextInput style={styles.input} placeholder='Name' placeholderTextColor='#6b6b6b' onChange={handleNameInputChange} value={nameInputValue} />
 
-        <TouchableOpacity  style={styles.button} onPress={() => handleAddParticipant("Bernardo")}>
+        <TouchableOpacity  style={styles.button} onPress={() => handleAddParticipant( nameInputValue )}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
